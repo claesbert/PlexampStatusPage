@@ -1,6 +1,9 @@
 # PlexampStatusPage
 A quick html page to cast to view the status of PlexAmp on your network
 
+![Alt text](Screenshot%202024-09-28%20200619.png))
+
+
 Just change these two lines to represent your plex
 
 Hhow to find your plex token: https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
