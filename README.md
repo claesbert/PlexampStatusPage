@@ -4,13 +4,11 @@ A quick html page to cast to view the status of PlexAmp on your network
 ![Alt text](Screenshot%202024-09-28%20200619.png))
 
 
-Just change these two lines to represent your plex
+The page first asks for you plex token and your (local) plex adress
 
 Hhow to find your plex token: https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
 
-<code>const plexToken = 'PLEXTOKEN'; // Replace with your Plex token
-    const plexIP = 'IPADRESS'; // Your Plex server IP
-  </code>
+
 
   TO DO: 
   change the pause behavior. 
