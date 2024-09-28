@@ -2,29 +2,64 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Now Playing on Plexamp</title>
-    <link rel="stylesheet" href="Style/style.css">
+    <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-<div id="clock"></div>
+<header>
+    <div id="clock"></div>
+</header>
 
-<div class="now-playing">
-    <h1></h1>
-    <div id="track-info">
-        <p>Loading...</p>
-    </div>
-    <div class="progress-container">
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
+<main>
+    <section class="now-playing">
+        <div class="album-art">
+            <img src="" alt="Album Art" id="album-art">
         </div>
-        <div class="time-info">
-            <span id="current-time">0:00</span>
-            <span id="total-time">0:00</span>
+        <div class="track-details">
+            <h1 id="track-title">Track Title</h1>
+            <h2 id="track-artist">Artist Name</h2>
+            <h3 id="track-album">Album Name (Year)</h3>
         </div>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="time-info">
+                <span id="current-time">0:00</span>
+                <span id="total-time">0:00</span>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Settings Cogwheel Icon -->
+<button id="settings-button" title="Settings">
+    <img src="https://img.icons8.com/ios-glyphs/30/000000/settings.png" alt="Settings">
+</button>
+
+<!-- Settings Modal -->
+<div id="settings-modal" class="modal">
+    <div class="modal-content">
+        <span id="close-modal">&times;</span>
+        <h2>Settings</h2>
+        <label for="plex-ip">Plex IP Address:</label>
+        <input type="text" id="plex-ip" placeholder="Enter Plex IP">
+        <label for="plex-token">Plex Token:</label>
+        <input type="text" id="plex-token" placeholder="Enter Plex Token">
+        <label for="theme-select">Select Theme:</label>
+        <select id="theme-select">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="dark-oled">Dark (OLED)</option>
+            <option value="bubblegum">Bubblegum</option>
+            <option value="pastel">Pastel</option>
+            <option value="glass">Glass</option>
+        </select>
+        <button id="save-settings">Save Settings</button>
     </div>
 </div>
 
-<script src="Code/script.js"></script>
+<!-- Include JavaScript Files -->
+<script type="module" src="scripts/main.js"></script>
 </body>
 </html>

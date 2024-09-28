@@ -1,0 +1,413 @@
+/* styles/style.css */
+
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Variables */
+:root {
+    --pastel-color: #ffd1dc; /* Default pastel color */
+}
+
+/* Base Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    transition: background 0.3s ease-in-out;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+    font-size: 18px;
+    color: #555;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.now-playing {
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+.album-art img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.track-details {
+    margin-top: 20px;
+}
+
+.progress-container {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: #e5e5e5;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: #007aff;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+.time-info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+#clock {
+    font-size: 18px;
+}
+
+#settings-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#settings-button img {
+    width: 30px;
+    height: 30px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 400px;
+    position: relative;
+}
+
+#close-modal {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+}
+
+.modal-content label {
+    display: block;
+    margin-top: 10px;
+}
+
+.modal-content input, .modal-content select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+#save-settings {
+    margin-top: 20px;
+    padding: 10px;
+    width: 100%;
+    background-color: #007aff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Theme Styles */
+
+/* Light Theme */
+body.light {
+    background-color: #fff;
+    color: #000;
+}
+
+body.light .track-details h2 {
+    color: #555;
+}
+
+body.light .track-details h3 {
+    color: #777;
+}
+
+body.light .progress-bar {
+    background-color: #e5e5e5;
+}
+
+body.light .progress {
+    background-color: #007aff;
+}
+
+body.light .time-info {
+    color: #555;
+}
+
+body.light .modal-content {
+    background-color: #fff;
+    color: #000;
+}
+
+/* Reduced drop shadow in Light mode */
+body.light .track-details h1,
+body.light .track-details h2,
+body.light .track-details h3,
+body.light #clock {
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark Theme */
+body.dark {
+    background-color: #1c1c1c;
+    color: #fff;
+}
+
+body.dark header {
+    color: #fff;
+}
+
+body.dark .track-details h2,
+body.dark .track-details h3,
+body.dark .time-info {
+    color: #ccc;
+}
+
+body.dark .progress-bar {
+    background-color: #333;
+}
+
+body.dark .progress {
+    background-color: #007aff;
+}
+
+body.dark .modal-content {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Dark (OLED) Theme */
+body.dark-oled {
+    background-color: #000;
+    color: #fff;
+}
+
+body.dark-oled header {
+    color: #fff;
+}
+
+body.dark-oled .track-details h2,
+body.dark-oled .track-details h3,
+body.dark-oled .time-info {
+    color: #ccc;
+}
+
+body.dark-oled .progress-bar {
+    background-color: #222;
+}
+
+body.dark-oled .progress {
+    background-color: #007aff;
+}
+
+body.dark-oled .modal-content {
+    background-color: #222;
+    color: #fff;
+}
+
+/* Bubblegum Theme */
+body.bubblegum {
+    background-color: #ff69b4;
+    color: #fff;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+body.bubblegum .track-details h2,
+body.bubblegum .track-details h3,
+body.bubblegum .time-info {
+    color: #fff;
+}
+
+body.bubblegum .progress-bar {
+    background-color: #ff1493;
+}
+
+body.bubblegum .progress {
+    background-color: #ff6ec7;
+}
+
+body.bubblegum #clock {
+    color: #fff;
+}
+
+body.bubblegum header {
+    color: #fff;
+}
+
+body.bubblegum button,
+body.bubblegum input,
+body.bubblegum select {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+body.bubblegum .modal-content {
+    background-color: #ff69b4;
+    color: #fff;
+}
+
+body.bubblegum {
+    cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>❤️</text></svg>") 16 0, auto;
+}
+
+/* Pastel Theme */
+body.pastel {
+    background-color: var(--pastel-color);
+    color: #fff;
+}
+
+body.pastel .track-details h2,
+body.pastel .track-details h3,
+body.pastel .time-info {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+body.pastel .progress-bar {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+body.pastel .progress {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+body.pastel #clock {
+    color: #fff;
+}
+
+body.pastel header {
+    color: #fff;
+}
+
+body.pastel .modal-content {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+}
+
+/* Ensure text is legible over any background */
+body.pastel .track-details h1,
+body.pastel .track-details h2,
+body.pastel .track-details h3,
+body.pastel #clock {
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Glass Theme */
+body.glass {
+    position: relative;
+    overflow: hidden;
+    color: #fff;
+}
+
+body.glass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: inherit;
+    filter: blur(20px) brightness(0.7);
+    transform: scale(1.1);
+    z-index: -1;
+}
+
+body.glass .now-playing,
+body.glass header {
+    position: relative;
+    z-index: 1;
+}
+
+body.glass .track-details h1,
+body.glass .track-details h2,
+body.glass .track-details h3,
+body.glass #clock {
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+body.glass .track-details h2,
+body.glass .track-details h3,
+body.glass .time-info {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+body.glass .progress-bar {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+body.glass .progress {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+body.glass #clock {
+    color: #fff;
+}
+
+body.glass header {
+    color: #fff;
+}
+
+body.glass .modal-content {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+}
+
+/* Add semi-transparent overlay behind content for Glass theme */
+body.glass .now-playing {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 8px;
+}
