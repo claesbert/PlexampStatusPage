@@ -63,6 +63,8 @@ async function fetchNowPlaying() {
             const mediaId = media.getAttribute("ratingKey");
             const title = media.getAttribute("title");
             const artist = media.getAttribute("grandparentTitle") || media.getAttribute("parentTitle");
+            const album = media.getAttribute("parentTitle");
+            const albumyear = media.getAttribute("parentYear");
             const coverUrl = media.getAttribute("thumb");
             const newOffset = parseInt(media.getAttribute("viewOffset")) || 0;
             const newDuration = parseInt(media.getAttribute("duration")) || 1;
@@ -79,7 +81,9 @@ async function fetchNowPlaying() {
 
             const imageUrl = `http://${plexIP}:32400${coverUrl}?X-Plex-Token=${plexToken}`;
             document.getElementById('track-info').innerHTML = `
-                <h2>${artist ? artist + ' - ' : ''}${title}</h2>
+                <h1>${artist}</h1>
+                <h2>${title}</h2>
+                <h3>${album} (${albumyear}) </h3>
                 <img src="${imageUrl}" alt="${title}">
             `;
 
@@ -89,6 +93,7 @@ async function fetchNowPlaying() {
             document.getElementById('progress').style.width = '0%';
             document.getElementById('current-time').innerText = '0:00';
             document.getElementById('total-time').innerText = '0:00';
+            // document.getElementById('remaining-time').innerText = 'total-time'-'current-time';
             isPlaying = false;
         }
     } catch (error) {
