@@ -1,10 +1,9 @@
 // scripts/main.js
-import { fetchNowPlaying } from './api.js';
+
+import { startFetchingNowPlaying } from './api.js';
 import { updateClock, initializeUI } from './ui.js';
 import { getCurrentTheme, applyTheme } from './themes.js';
-import { getPlexCredentials } from './utils.js';
 
-// Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     // Apply the current theme
     applyTheme(getCurrentTheme());
@@ -16,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateClock();
     setInterval(updateClock, 1000);
 
-    // Fetch now playing info periodically
-    setInterval(fetchNowPlaying, 5000);
-    fetchNowPlaying();
+    // Start fetching now playing info
+    startFetchingNowPlaying();
 });
