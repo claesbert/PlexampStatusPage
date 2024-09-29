@@ -1,12 +1,8 @@
 // scripts/api.js
+
 import { updateNowPlayingUI, resetNowPlaying } from './ui.js';
 import { getPlexCredentials, formatTime } from './utils.js';
-
-let lastMediaId = '';
-export let currentOffset = 0;
-export let totalDuration = 0;
-export let lastUpdate = Date.now();
-export let isPlaying = false;
+import { state } from './state.js';
 
 export async function fetchNowPlaying() {
     const { plexToken, plexIP } = getPlexCredentials();
@@ -31,11 +27,11 @@ export async function fetchNowPlaying() {
             const newOffset = parseInt(media.getAttribute("viewOffset")) || 0;
             const newDuration = parseInt(media.getAttribute("duration")) || 1;
 
-            if (mediaId !== lastMediaId || Math.abs(newOffset - currentOffset) > 5000) {
-                lastMediaId = mediaId;
-                currentOffset = newOffset;
-                totalDuration = newDuration;
-                lastUpdate = Date.now();
+            if (mediaId !== state.lastMediaId || Math.abs(newOffset - state.currentOffset) > 5000) {
+                state.lastMediaId = mediaId;
+                state.currentOffset = newOffset;
+                state.totalDuration = newDuration;
+                state.lastUpdate = Date.now();
 
                 updateNowPlayingUI({
                     title,
@@ -48,10 +44,10 @@ export async function fetchNowPlaying() {
                 });
             }
 
-            isPlaying = true;
+            state.isPlaying = true;
 
             // Update total time in the UI
-            document.getElementById('total-time').innerText = formatTime(totalDuration);
+            document.getElementById('total-time').innerText = formatTime(state.totalDuration);
 
         } else {
             // No media is playing

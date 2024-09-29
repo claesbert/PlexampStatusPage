@@ -17,6 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateClock, 1000);
 
     // Fetch now playing info periodically
-    setInterval(fetchNowPlaying, 5000);
+    setInterval(fetchNowPlaying, 1000);
     fetchNowPlaying();
 });

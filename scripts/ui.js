@@ -1,7 +1,9 @@
 // scripts/ui.js
+
 import { getCurrentTheme, applyTheme } from './themes.js';
 import { getPlexCredentials, savePlexCredentials, formatTime } from './utils.js';
-import { fetchNowPlaying, isPlaying, currentOffset, totalDuration, lastUpdate } from './api.js';
+import { fetchNowPlaying } from './api.js';
+import { state } from './state.js';
 
 const clockElement = document.getElementById('clock');
 const progressElement = document.getElementById('progress');
@@ -41,18 +43,18 @@ export function updateClock() {
 }
 
 function updateProgressBar() {
-    if (isPlaying) {
+    if (state.isPlaying) {
         const now = Date.now();
-        const elapsedTime = now - lastUpdate;
-        currentOffset += elapsedTime;
-        lastUpdate = now;
+        const elapsedTime = now - state.lastUpdate;
+        state.currentOffset += elapsedTime;
+        state.lastUpdate = now;
 
-        const progressPercentage = (currentOffset / totalDuration) * 100;
+        const progressPercentage = (state.currentOffset / state.totalDuration) * 100;
         progressElement.style.width = progressPercentage + '%';
-        currentTimeElement.innerText = formatTime(currentOffset);
+        currentTimeElement.innerText = formatTime(state.currentOffset);
 
-        if (currentOffset >= totalDuration) {
-            isPlaying = false;
+        if (state.currentOffset >= state.totalDuration) {
+            state.isPlaying = false;
         }
     }
 }
@@ -86,13 +88,12 @@ export function resetNowPlaying() {
     progressElement.style.width = '0%';
     currentTimeElement.innerText = '0:00';
     totalTimeElement.innerText = '0:00';
-    isPlaying = false;
+    state.isPlaying = false;
 
     // Reset background for dynamic themes
     clearDynamicBackground();
 }
 
-// Settings Modal Functions
 function openSettingsModal() {
     settingsModal.style.display = 'block';
     // Populate inputs with current values
