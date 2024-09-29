@@ -1,9 +1,9 @@
 // scripts/ui.js
 
-import { getCurrentTheme, applyTheme } from './themes.js';
-import { getPlexCredentials, savePlexCredentials, formatTime } from './utils.js';
-import { fetchNowPlaying } from './api.js';
+import { getCurrentTheme, applyTheme, setCurrentTheme } from './themes.js';
+import { getPlexCredentials, savePlexCredentials, formatTime, getTimeFormat, setTimeFormat } from './utils.js';
 import { state } from './state.js';
+import { fetchNowPlaying } from './api.js';
 
 const clockElement = document.getElementById('clock');
 const progressElement = document.getElementById('progress');
@@ -21,6 +21,7 @@ const saveSettingsButton = document.getElementById('save-settings');
 const plexIPInput = document.getElementById('plex-ip');
 const plexTokenInput = document.getElementById('plex-token');
 const themeSelect = document.getElementById('theme-select');
+const timeFormatSelect = document.getElementById('time-format');
 
 export function initializeUI() {
     // Event listeners for settings modal
@@ -30,16 +31,22 @@ export function initializeUI() {
     saveSettingsButton.addEventListener('click', saveSettings);
 
     // Start the progress bar updater
-    setInterval(updateProgressBar, 1000);
+    setInterval(updateProgressBar, 200); // Update every 200ms
 }
 
 export function updateClock() {
     const now = new Date();
     const hours = now.getHours();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const displayHours = hours % 12 || 12;
     const minutes = now.getMinutes().toString().padStart(2, '0');
-    clockElement.innerText = `${displayHours}:${minutes} ${ampm}`;
+
+    const timeFormat = getTimeFormat();
+    if (timeFormat === '24h') {
+        clockElement.innerText = `${hours.toString().padStart(2, '0')}:${minutes}`;
+    } else {
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const displayHours = hours % 12 || 12;
+        clockElement.innerText = `${displayHours}:${minutes} ${ampm}`;
+    }
 }
 
 function updateProgressBar() {
@@ -49,24 +56,27 @@ function updateProgressBar() {
         state.currentOffset += elapsedTime;
         state.lastUpdate = now;
 
-        const progressPercentage = (state.currentOffset / state.totalDuration) * 100;
-        progressElement.style.width = progressPercentage + '%';
-        currentTimeElement.innerText = formatTime(state.currentOffset);
+        const adjustedOffset = Math.min(state.currentOffset, state.totalDuration);
 
-        if (state.currentOffset >= state.totalDuration) {
+        const progressPercentage = (adjustedOffset / state.totalDuration) * 100;
+        progressElement.style.width = progressPercentage + '%';
+        currentTimeElement.innerText = formatTime(adjustedOffset);
+
+        if (adjustedOffset >= state.totalDuration) {
             state.isPlaying = false;
+            resetNowPlaying();
         }
     }
 }
 
 export function updateNowPlayingUI(mediaInfo) {
-    const { title, artist, album, albumYear, coverUrl, plexIP, plexToken } = mediaInfo;
+    const { mediaId, title, artist, album, albumYear, coverUrl, plexIP, plexToken, viewOffset, duration } = mediaInfo;
     const imageUrl = `http://${plexIP}:32400${coverUrl}?X-Plex-Token=${plexToken}`;
 
     trackTitleElement.innerText = title;
     trackArtistElement.innerText = artist;
     trackAlbumElement.innerText = albumYear ? `${album} (${albumYear})` : album;
-    albumArtElement.crossOrigin = "Anonymous"; // Important for CORS
+    albumArtElement.crossOrigin = 'Anonymous'; // Important for CORS
     albumArtElement.src = imageUrl;
 
     // Apply dynamic themes
@@ -78,6 +88,23 @@ export function updateNowPlayingUI(mediaInfo) {
     } else {
         clearDynamicBackground();
     }
+
+    // Update total time
+    totalTimeElement.innerText = formatTime(duration);
+
+    // Sync progress only if media has changed or client is behind server by more than 2 seconds
+    const drift = viewOffset - state.currentOffset;
+    if (state.lastMediaId !== mediaId || drift > 2000) {
+        state.lastMediaId = mediaId;
+        state.currentOffset = viewOffset;
+        state.totalDuration = duration;
+        state.lastUpdate = Date.now();
+    } else {
+        // Do not adjust if the server's viewOffset is behind or within 2 seconds ahead
+        // This prevents the progress bar from skipping back
+    }
+
+    state.isPlaying = true;
 }
 
 export function resetNowPlaying() {
@@ -94,6 +121,7 @@ export function resetNowPlaying() {
     clearDynamicBackground();
 }
 
+// Settings Modal Functions
 function openSettingsModal() {
     settingsModal.style.display = 'block';
     // Populate inputs with current values
@@ -101,6 +129,7 @@ function openSettingsModal() {
     plexIPInput.value = plexIP || '';
     plexTokenInput.value = plexToken || '';
     themeSelect.value = getCurrentTheme();
+    timeFormatSelect.value = getTimeFormat();
 
     // Apply theme to modal
     settingsModal.className = `modal ${getCurrentTheme()}`;
@@ -120,12 +149,18 @@ function saveSettings() {
     const plexIP = plexIPInput.value.trim();
     const plexToken = plexTokenInput.value.trim();
     const selectedTheme = themeSelect.value;
+    const selectedTimeFormat = timeFormatSelect.value;
 
     if (plexIP && plexToken) {
         savePlexCredentials(plexToken, plexIP);
     }
 
+    setCurrentTheme(selectedTheme);
     applyTheme(selectedTheme);
+
+    setTimeFormat(selectedTimeFormat);
+    updateClock();
+
     settingsModal.style.display = 'none';
     fetchNowPlaying(); // Refresh now playing info
 }

@@ -2,7 +2,7 @@
 
 // Format time in mm:ss
 export function formatTime(milliseconds) {
-    const totalSeconds = Math.floor(milliseconds / 1000);
+    const totalSeconds = Math.floor(milliseconds / 1000); // Convert to seconds
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
@@ -63,4 +63,13 @@ export function getAverageRGB(imgEl) {
     rgb.b = ~~(rgb.b / count);
 
     return rgb;
+}
+
+// Time format functions
+export function getTimeFormat() {
+    return localStorage.getItem('timeFormat') || '24h';
+}
+
+export function setTimeFormat(format) {
+    localStorage.setItem('timeFormat', format);
 }

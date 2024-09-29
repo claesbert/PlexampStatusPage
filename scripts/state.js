@@ -2,8 +2,8 @@
 
 export const state = {
     lastMediaId: '',
-    currentOffset: 0,
     totalDuration: 0,
+    currentOffset: 0, // Client-side playback position in milliseconds
     lastUpdate: Date.now(),
     isPlaying: false,
 };

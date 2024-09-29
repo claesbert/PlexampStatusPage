@@ -1,8 +1,15 @@
 // scripts/api.js
 
 import { updateNowPlayingUI, resetNowPlaying } from './ui.js';
-import { getPlexCredentials, formatTime } from './utils.js';
-import { state } from './state.js';
+import { getPlexCredentials } from './utils.js';
+
+let fetchIntervalId = null;
+
+export function startFetchingNowPlaying() {
+    fetchNowPlaying();
+    if (fetchIntervalId) clearInterval(fetchIntervalId);
+    fetchIntervalId = setInterval(fetchNowPlaying, 5000); // Fetch every 5 seconds
+}
 
 export async function fetchNowPlaying() {
     const { plexToken, plexIP } = getPlexCredentials();
@@ -13,42 +20,40 @@ export async function fetchNowPlaying() {
         const response = await fetch(url);
         const data = await response.text();
         const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(data, "text/xml");
+        const xmlDoc = parser.parseFromString(data, 'text/xml');
 
-        const media = xmlDoc.querySelector("Video") || xmlDoc.querySelector("Track");
+        const media = xmlDoc.querySelector('Video') || xmlDoc.querySelector('Track');
 
         if (media) {
-            const mediaId = media.getAttribute("ratingKey");
-            const title = media.getAttribute("title");
-            const artist = media.getAttribute("grandparentTitle") || media.getAttribute("parentTitle");
-            const album = media.getAttribute("parentTitle");
-            const albumYear = media.getAttribute("parentYear") || '';
-            const coverUrl = media.getAttribute("thumb");
-            const newOffset = parseInt(media.getAttribute("viewOffset")) || 0;
-            const newDuration = parseInt(media.getAttribute("duration")) || 1;
+            const mediaId = media.getAttribute('ratingKey');
+            const title = media.getAttribute('title');
 
-            if (mediaId !== state.lastMediaId || Math.abs(newOffset - state.currentOffset) > 5000) {
-                state.lastMediaId = mediaId;
-                state.currentOffset = newOffset;
-                state.totalDuration = newDuration;
-                state.lastUpdate = Date.now();
-
-                updateNowPlayingUI({
-                    title,
-                    artist,
-                    album,
-                    albumYear,
-                    coverUrl,
-                    plexIP,
-                    plexToken
-                });
+            // Handle Various Artists issue
+            let artist;
+            if (media.getAttribute('grandparentTitle') === 'Various Artists') {
+                artist = media.getAttribute('originalTitle') || media.getAttribute('title') || 'Unknown Artist';
+            } else {
+                artist = media.getAttribute('grandparentTitle') || media.getAttribute('parentTitle') || 'Unknown Artist';
             }
 
-            state.isPlaying = true;
+            const album = media.getAttribute('parentTitle');
+            const albumYear = media.getAttribute('parentYear') || '';
+            const coverUrl = media.getAttribute('thumb');
+            const viewOffset = parseInt(media.getAttribute('viewOffset')) || 0;
+            const duration = parseInt(media.getAttribute('duration')) || 1;
 
-            // Update total time in the UI
-            document.getElementById('total-time').innerText = formatTime(state.totalDuration);
-
+            updateNowPlayingUI({
+                mediaId,
+                title,
+                artist,
+                album,
+                albumYear,
+                coverUrl,
+                plexIP,
+                plexToken,
+                viewOffset,
+                duration,
+            });
         } else {
             // No media is playing
             resetNowPlaying();

@@ -1,12 +1,16 @@
 // scripts/themes.js
+
 import { getAverageRGB } from './utils.js';
 
 export function getCurrentTheme() {
     return localStorage.getItem('theme') || 'light';
 }
 
-export function applyTheme(theme, albumArtElement) {
+export function setCurrentTheme(theme) {
     localStorage.setItem('theme', theme);
+}
+
+export function applyTheme(theme, albumArtElement) {
     document.body.className = theme;
 
     // Remove any dynamic backgrounds if not in dynamic themes
