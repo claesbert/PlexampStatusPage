@@ -135,7 +135,7 @@ export function resetNowPlaying() {
     trackTitleElement.innerText = 'Nothing is currently playing.';
     trackArtistElement.innerText = '';
     trackAlbumElement.innerText = '';
-    albumArtElement.src = 'https://avatars.githubusercontent.com/u/43970498'; // Default image
+    albumArtElement.src = 'Assets/Images/loadingcat.webp'; // Default image
     progressElement.style.width = '0%';
     currentTimeElement.innerText = '0:00';
     totalTimeElement.innerText = '0:00';
