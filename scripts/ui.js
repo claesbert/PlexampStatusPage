@@ -1,7 +1,18 @@
 // scripts/ui.js
 
-import { getCurrentTheme, applyTheme, setCurrentTheme } from './themes.js';
-import { getPlexCredentials, savePlexCredentials, formatTime, getTimeFormat, setTimeFormat } from './utils.js';
+import {
+    getCurrentTheme,
+    applyTheme,
+    setCurrentTheme,
+    clearDynamicBackground,
+} from './themes.js';
+import {
+    getPlexCredentials,
+    savePlexCredentials,
+    formatTime,
+    getTimeFormat,
+    setTimeFormat,
+} from './utils.js';
 import { state } from './state.js';
 import { fetchNowPlaying } from './api.js';
 
@@ -70,24 +81,26 @@ function updateProgressBar() {
 }
 
 export function updateNowPlayingUI(mediaInfo) {
-    const { mediaId, title, artist, album, albumYear, coverUrl, plexIP, plexToken, viewOffset, duration } = mediaInfo;
+    const {
+        mediaId,
+        title,
+        artist,
+        album,
+        albumYear,
+        coverUrl,
+        plexIP,
+        plexToken,
+        viewOffset,
+        duration,
+    } = mediaInfo;
     const imageUrl = `http://${plexIP}:32400${coverUrl}?X-Plex-Token=${plexToken}`;
 
     trackTitleElement.innerText = title;
     trackArtistElement.innerText = artist;
     trackAlbumElement.innerText = albumYear ? `${album} (${albumYear})` : album;
+
     albumArtElement.crossOrigin = 'Anonymous'; // Important for CORS
     albumArtElement.src = imageUrl;
-
-    // Apply dynamic themes
-    const theme = getCurrentTheme();
-    if (theme === 'pastel' || theme === 'glass') {
-        albumArtElement.onload = () => {
-            applyTheme(theme, albumArtElement);
-        };
-    } else {
-        clearDynamicBackground();
-    }
 
     // Update total time
     totalTimeElement.innerText = formatTime(duration);
@@ -105,6 +118,17 @@ export function updateNowPlayingUI(mediaInfo) {
     }
 
     state.isPlaying = true;
+
+    // Apply theme when album art loads
+    albumArtElement.onload = () => {
+        const theme = getCurrentTheme();
+        if (theme === 'pastel' || theme === 'glass') {
+            applyTheme(theme, albumArtElement);
+        } else {
+            clearDynamicBackground();
+            applyTheme(theme);
+        }
+    };
 }
 
 export function resetNowPlaying() {
@@ -119,6 +143,9 @@ export function resetNowPlaying() {
 
     // Reset background for dynamic themes
     clearDynamicBackground();
+
+    // Apply the current theme without dynamic backgrounds
+    applyTheme(getCurrentTheme());
 }
 
 // Settings Modal Functions
@@ -156,18 +183,18 @@ function saveSettings() {
     }
 
     setCurrentTheme(selectedTheme);
-    applyTheme(selectedTheme);
+
+    // Apply the theme immediately
+    const theme = selectedTheme;
+    if (theme === 'pastel' || theme === 'glass') {
+        applyTheme(theme, albumArtElement);
+    } else {
+        applyTheme(theme);
+    }
 
     setTimeFormat(selectedTimeFormat);
     updateClock();
 
     settingsModal.style.display = 'none';
     fetchNowPlaying(); // Refresh now playing info
-}
-
-function clearDynamicBackground() {
-    document.body.style.backgroundImage = '';
-    document.body.style.backgroundColor = '';
-    document.body.classList.remove('glass-theme', 'pastel-theme');
-    document.documentElement.style.removeProperty('--pastel-color');
 }

@@ -31,9 +31,15 @@ export async function fetchNowPlaying() {
             // Handle Various Artists issue
             let artist;
             if (media.getAttribute('grandparentTitle') === 'Various Artists') {
-                artist = media.getAttribute('originalTitle') || media.getAttribute('title') || 'Unknown Artist';
+                artist =
+                    media.getAttribute('originalTitle') ||
+                    media.getAttribute('title') ||
+                    'Unknown Artist';
             } else {
-                artist = media.getAttribute('grandparentTitle') || media.getAttribute('parentTitle') || 'Unknown Artist';
+                artist =
+                    media.getAttribute('grandparentTitle') ||
+                    media.getAttribute('parentTitle') ||
+                    'Unknown Artist';
             }
 
             const album = media.getAttribute('parentTitle');
