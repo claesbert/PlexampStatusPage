@@ -122,7 +122,7 @@ export function updateNowPlayingUI(mediaInfo) {
     // Apply theme when album art loads
     albumArtElement.onload = () => {
         const theme = getCurrentTheme();
-        if (theme === 'pastel' || theme === 'glass') {
+        if (theme === 'pastel' || theme === 'glass' || theme == 'gradient') {
             applyTheme(theme, albumArtElement);
         } else {
             clearDynamicBackground();
