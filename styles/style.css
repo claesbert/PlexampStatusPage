@@ -411,3 +411,47 @@ body.glass .now-playing {
     padding: 20px;
     border-radius: 8px;
 }
+
+
+/* Gradient Theme */
+.pastel-gradient-theme {
+    background: var(--background-gradient);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh; /* Ensures it covers the full height of the page */
+}
+
+body.gradient .track-details h2,
+body.gradient .track-details h3,
+body.gradient .time-info {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+body.gradient .progress-bar {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+body.gradient .progress {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+body.gradient #clock {
+    color: #fff;
+}
+
+body.gradient header {
+    color: #fff;
+}
+
+body.gradient .modal-content {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+}
+
+/* Ensure text is legible over any background */
+body.gradient .track-details h1,
+body.gradient .track-details h2,
+body.gradient .track-details h3,
+body.gradient #clock {
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
