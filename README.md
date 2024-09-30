@@ -8,12 +8,11 @@ A sleek minimal web dashboard that displays the currently playing track on Plexa
 ## Features
 
 - **Real-Time Now Playing Information**: Shows track title, artist, album, and album art.
-- **Smooth Progress Bar**: Visually tracks playback progress without skipping.
+- **Smooth Progress Bar**: Visually tracks playback progress without skipping. (I mention this specifically because there was a bug that took up like 1/3rd of development time)
 - **Dynamic Themes**:
   - **Light & Dark**: Classic themes for different lighting preferences.
   - **Gradient, Pastel & Glass**: Dynamic backgrounds based on album art colors.
 - **Time Format Toggle**: Switch between 24-hour and 12-hour (AM/PM) formats.
-- **Settings Modal**: Easily configure Plex server details and theme preferences.
 
 ## Installation
 
