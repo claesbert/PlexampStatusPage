@@ -2,7 +2,7 @@
 
 A sleek minimal web dashboard that displays the currently playing track on Plexamp with dynamic themes and real-time progress tracking.
 
-![Alt text](Screenshot%202024-09-29%20201734.png)
+![Alt text](Screenshot_gradient.png)
 
 
 ## Features
