@@ -33,6 +33,7 @@ const plexIPInput = document.getElementById('plex-ip');
 const plexTokenInput = document.getElementById('plex-token');
 const themeSelect = document.getElementById('theme-select');
 const timeFormatSelect = document.getElementById('time-format');
+const enforceHttps = document.getElementById('https-toggle');
 
 export function initializeUI() {
     // Event listeners for settings modal
@@ -93,13 +94,15 @@ export function updateNowPlayingUI(mediaInfo) {
         viewOffset,
         duration,
     } = mediaInfo;
-    const imageUrl = `http://${plexIP}:32400${coverUrl}?X-Plex-Token=${plexToken}`;
+    const useHttps = localStorage.getItem('EnforceHTTPS') === 'true';
+    const protocol = useHttps ? 'https' : 'http';
+    const imageUrl = `${protocol}://${plexIP}:32400${coverUrl}?X-Plex-Token=${plexToken}`;
 
     trackTitleElement.innerText = title;
     trackArtistElement.innerText = artist;
     trackAlbumElement.innerText = albumYear ? `${album} (${albumYear})` : album;
 
-    albumArtElement.crossOrigin = 'Anonymous'; // Important for CORS
+    albumArtElement.crossOrigin = 'Anonymous'; // Important for CORS -> Fuck CORS, im not a web dev
     albumArtElement.src = imageUrl;
 
     // Update total time
@@ -122,13 +125,18 @@ export function updateNowPlayingUI(mediaInfo) {
     // Apply theme when album art loads
     albumArtElement.onload = () => {
         const theme = getCurrentTheme();
-        if (theme === 'pastel' || theme === 'glass' || theme == 'gradient') {
+        if (theme === 'pastel' || theme === 'glass' || theme === 'gradient') {
             applyTheme(theme, albumArtElement);
         } else {
             clearDynamicBackground();
             applyTheme(theme);
         }
     };
+}
+
+export function useHttps() {
+    // Get the EnforceHTTPS setting from localStorage and return it as a boolean value
+    return localStorage.getItem('EnforceHTTPS') === 'true';
 }
 
 export function resetNowPlaying() {
@@ -157,6 +165,7 @@ function openSettingsModal() {
     plexTokenInput.value = plexToken || '';
     themeSelect.value = getCurrentTheme();
     timeFormatSelect.value = getTimeFormat();
+    enforceHttps.checked = localStorage.getItem('EnforceHTTPS') === 'true';
 
     // Apply theme to modal
     settingsModal.className = `modal ${getCurrentTheme()}`;
@@ -177,6 +186,7 @@ function saveSettings() {
     const plexToken = plexTokenInput.value.trim();
     const selectedTheme = themeSelect.value;
     const selectedTimeFormat = timeFormatSelect.value;
+    const useHttps = enforceHttps.checked;
 
     if (plexIP && plexToken) {
         savePlexCredentials(plexToken, plexIP);
@@ -193,6 +203,7 @@ function saveSettings() {
     }
 
     setTimeFormat(selectedTimeFormat);
+    localStorage.setItem('EnforceHTTPS', useHttps);
     updateClock();
 
     settingsModal.style.display = 'none';

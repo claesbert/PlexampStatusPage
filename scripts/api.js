@@ -1,6 +1,6 @@
 // scripts/api.js
 
-import { updateNowPlayingUI, resetNowPlaying } from './ui.js';
+import { updateNowPlayingUI, resetNowPlaying, useHttps } from './ui.js';
 import { getPlexCredentials } from './utils.js';
 
 let fetchIntervalId = null;
@@ -15,7 +15,10 @@ export async function fetchNowPlaying() {
     const { plexToken, plexIP } = getPlexCredentials();
     if (!plexToken || !plexIP) return;
 
-    const url = `http://${plexIP}:32400/status/sessions?X-Plex-Token=${plexToken}`;
+    // Use the imported HTTPS setting
+    const protocol = useHttps() ? 'https' : 'http';
+
+    const url = `${protocol}://${plexIP}:32400/status/sessions?X-Plex-Token=${plexToken}`;
     try {
         const response = await fetch(url);
         const data = await response.text();
