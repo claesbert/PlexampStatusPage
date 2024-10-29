@@ -19,7 +19,7 @@ A sleek minimal web dashboard that displays the currently playing track on Plexa
 1. **Clone the Repository**
 2. **Navigate to the Project Directory**
 3. **Open `index.html` in Your Browser**
-   - Warning: If your browser is in HTTPS only mode it currently doesn't work. A toggle for HTTPS will come at some point. For now if your plex server serves over HTTPS you can edit the api.js file so the call goes over HTTPS instead.
+   - Warning: If your server doesn't support HTTPS/Only supports HTTPS make sure the toggle in the settings modal reflects this. Otherwise it won't pull data.
 
 ## Configuration
 
@@ -52,6 +52,7 @@ A sleek minimal web dashboard that displays the currently playing track on Plexa
 
 Creative Commons Zero v1.0 Universal
 _Basiclly: Do whatever the fuck you want with this, we waive copyright, it is part of the public domain_
+
 _I'll admit idk what it means to use a library like vibrant.js in a CC0 codebase. Like obviously it is covered by its own license._
 
 ## Known (big) issues
